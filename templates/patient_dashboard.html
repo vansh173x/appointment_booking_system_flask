@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head">
+    <div>
+      <h1>Hello, {{ session.user_name }} 👋</h1>
+      <p>Here's an overview of your health activity</p>
+    </div>
+    <a href="{{ url_for('browse_doctors') }}" class="btn btn-primary">+ Book Appointment</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-label">Total Appointments</div><div class="stat-value">{{ appointments|length }}</div></div>
+    <div class="stat stat-accent"><div class="stat-label">Active Plans</div><div class="stat-value">{{ subs|selectattr('active','equalto',1)|list|length }}</div></div>
+    <div class="stat stat-warning"><div class="stat-label">Unread Messages</div><div class="stat-value">{{ unread }}</div></div>
+  </div>
+
+  <div class="card">
+    <h2>My Appointments</h2>
+    {% if appointments %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+          {% for a in appointments %}
+            <tr>
+              <td>Dr. {{ a.doctor_name }}</td>
+              <td>{{ a.specialization }}</td>
+              <td>{{ a.date }}</td>
+              <td>{{ a.time }}</td>
+              <td><span class="badge badge-{{ a.status }}">{{ a.status }}</span></td>
+              <td><a href="{{ url_for('chat', other_id=a.doctor_id) }}" class="btn btn-sm btn-outline">💬 Chat</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty"><div class="empty-icon">📅</div><p>No appointments yet. <a href="{{ url_for('browse_doctors') }}">Book your first one</a>.</p></div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>My Subscriptions</h2>
+    {% if subs %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Plan</th><th>Price</th><th>Start</th><th>End</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for s in subs %}
+            <tr>
+              <td>{{ s.plan_name }}</td>
+              <td>₹{{ s.price }}</td>
+              <td>{{ s.start_date }}</td>
+              <td>{{ s.end_date }}</td>
+              <td><span class="badge {{ 'badge-approved' if s.active else 'badge-rejected' }}">{{ 'Active' if s.active else 'Expired' }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty"><div class="empty-icon">💳</div><p>No active subscriptions. <a href="{{ url_for('view_subscriptions') }}">View plans</a>.</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

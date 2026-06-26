@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Subscription Plans — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="section-title">
+    <h2>Choose Your Plan</h2>
+    <p>Affordable healthcare subscriptions for you and your family</p>
+  </div>
+  <div class="plans-landscape">
+    {% for p in plans %}
+      <div class="plan-land {% if p.name == 'Premium' %}plan-popular-land{% endif %}">
+        {% if p.name == 'Premium' %}<div class="plan-badge-land">Most Popular</div>{% endif %}
+        <div class="plan-land-left">
+          <h3>{{ p.name }}</h3>
+          <p class="desc">{{ p.description }}</p>
+          <div class="price">₹{{ p.price|int }}<small>/{{ p.duration_days }} days</small></div>
+        </div>
+        <div class="plan-land-mid">
+          <ul class="plan-features-land">
+            {% for f in p.features.split('|') %}
+              <li><span class="check">✓</span>{{ f }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="plan-land-right">
+          <form method="POST" action="{{ url_for('subscribe', plan_id=p.id) }}">
+            <button class="btn btn-primary btn-lg btn-block">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

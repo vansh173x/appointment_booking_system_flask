@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Messages — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head">
+    <div><h1>Messages</h1><p>Your conversations</p></div>
+  </div>
+  {% if contacts %}
+    <div class="contact-list">
+      {% for c in contacts %}
+        <div class="contact">
+          <div class="contact-info">
+            <div class="avatar">{{ c.name[0]|upper }}</div>
+            <div>
+              <div class="contact-name">{{ 'Dr. ' if session.role=='patient' else '' }}{{ c.name }}</div>
+              {% if c.specialization is defined and c.specialization %}
+                <div class="contact-sub">{{ c.specialization }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <a href="{{ url_for('chat', other_id=c.id) }}" class="btn btn-sm btn-primary">Open Chat</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card"><div class="empty"><div class="empty-icon">💬</div><p>No conversations yet. Book or accept an appointment to start chatting.</p></div></div>
+  {% endif %}
+</div>
+{% endblock %}

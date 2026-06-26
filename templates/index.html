@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Your Health, One Click Away</h1>
+    <p>Book appointments with trusted doctors, get teleconsultations, and manage your health — all in one place.</p>
+    <div class="hero-cta">
+      {% if session.user_id %}
+        <a href="{{ url_for('patient_dashboard') if session.role=='patient' else url_for('doctor_dashboard') }}" class="btn btn-accent">Go to Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-accent">Get Started Free</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section live-stats-section">
+  <div class="section-title">
+    <h2>Trusted by Thousands</h2>
+    <p>Real numbers, real care — updated live from our platform</p>
+  </div>
+  <div class="live-stats">
+    <div class="live-stat">
+      <div class="live-icon">🧑‍🤝‍🧑</div>
+      <div class="live-value">{{ stats.patients if stats and stats.patients is defined else 12480 }}+</div>
+      <div class="live-label">Total Patients</div>
+    </div>
+    <div class="live-stat">
+      <div class="live-icon">👨‍⚕️</div>
+      <div class="live-value">{{ stats.doctors if stats and stats.doctors is defined else 320 }}+</div>
+      <div class="live-label">Expert Doctors</div>
+    </div>
+    <div class="live-stat">
+      <div class="live-icon">📅</div>
+      <div class="live-value">{{ stats.appointments if stats and stats.appointments is defined else 45200 }}+</div>
+      <div class="live-label">Appointments Booked</div>
+    </div>
+    <div class="live-stat">
+      <div class="live-icon">🩺</div>
+      <div class="live-value">{{ stats.specializations if stats and stats.specializations is defined else 28 }}+</div>
+      <div class="live-label">Specializations</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title">
+    <h2>Why Choose EHealth?</h2>
+    <p>Quality healthcare made simple, accessible, and affordable</p>
+  </div>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">👨‍⚕️</div>
+      <h3>Verified Doctors</h3>
+      <p>Connect with certified professionals across multiple specializations.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📅</div>
+      <h3>Easy Booking</h3>
+      <p>Schedule appointments in seconds, anytime, anywhere.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💬</div>
+      <h3>Secure Chat</h3>
+      <p>Chat directly with your doctor for follow-ups and quick advice.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💳</div>
+      <h3>Affordable Plans</h3>
+      <p>Choose subscriptions that fit your family's needs and budget.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="card cta-card">
+    <h2>Ready to take charge of your health?</h2>
+    <p>Join thousands who trust EHealth for their daily healthcare needs.</p>
+    {% if not session.user_id %}
+      <a href="{{ url_for('register') }}" class="btn btn-primary">Create Free Account</a>
+    {% else %}
+      <a href="{{ url_for('browse_doctors') if session.role=='patient' else url_for('doctor_dashboard') }}" class="btn btn-primary">Continue</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

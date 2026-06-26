@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}My Profile — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="container-sm" style="margin:0 auto;max-width:640px">
+    <div class="card">
+      <h2>Edit Profile</h2>
+      <p style="color:var(--muted);margin-bottom:18px">Logged in as <strong>{{ user.name }}</strong> ({{ user.email }})</p>
+      <form method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Specialization</label>
+            <input type="text" name="specialization" value="{{ profile.specialization }}" required>
+          </div>
+          <div class="form-group">
+            <label>Experience (years)</label>
+            <input type="number" name="experience" value="{{ profile.experience }}" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Consultation Fee (₹)</label>
+          <input type="number" name="fee" value="{{ profile.fee|int }}" min="0">
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea name="bio">{{ profile.bio }}</textarea>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" name="available" {% if profile.available %}checked{% endif %} style="width:auto">
+            <span>Available for new appointments</span>
+          </label>
+        </div>
+        <button class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

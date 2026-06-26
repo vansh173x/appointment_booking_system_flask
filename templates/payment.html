@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Pay for {{ plan.name }} – EHealth{% endblock %}
+{% block content %}
+<div class="container" style="max-width:520px;margin:2rem auto;">
+
+  <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem;">
+    <a href="{{ url_for('view_subscriptions') }}" style="color:var(--primary);">Plans</a> › Payment
+  </p>
+
+  <div class="card" style="border-radius:16px;padding:2rem;border:1px solid var(--border);box-shadow:var(--shadow);">
+
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;">
+          EHealth · UPI Payment
+        </div>
+        <div style="font-size:1.4rem;font-weight:800;color:var(--primary);margin-top:.2rem;">
+          {{ plan.name }} Plan
+        </div>
+        <div style="color:var(--text-muted);font-size:.9rem;">{{ plan.description }}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:2rem;font-weight:900;color:var(--primary);">₹{{ plan.price|int }}</div>
+        <div style="font-size:.8rem;color:var(--text-muted);">/month</div>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin-bottom:1.5rem;">
+
+    <!-- QR Section -->
+    <!-- Real UPI QR -->
+  <div style="display:inline-block;padding:1rem;background:#fff;border-radius:12px;
+              border:2px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.08);">
+    <img src="{{ url_for('static', filename='upi_qr.png') }}"
+         alt="UPI QR Code"
+         style="width:200px;height:200px;display:block;border-radius:6px;">
+  </div>
+      <!-- Open in UPI app button (works on mobile) -->
+      <div style="margin-top:1rem;">
+        <a href="{{ upi_url }}"
+           style="display:inline-block;padding:.65rem 1.5rem;background:var(--primary);color:#fff;
+                  border-radius:8px;font-weight:700;font-size:.9rem;text-decoration:none;">
+          📲 Open in UPI App
+        </a>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-top:.4rem;">
+          Works on GPay · PhonePe · Paytm · BHIM
+        </div>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin-bottom:1.5rem;">
+
+    <!-- Confirm form -->
+    <form method="POST" action="{{ url_for('confirm_payment', plan_id=plan.id) }}">
+      <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:.75rem;">
+        Payment ke baad Transaction ID enter karo aur confirm karo.
+      </p>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:.83rem;font-weight:600;color:#374151;display:block;margin-bottom:.4rem;">
+          UPI Transaction ID <span style="color:var(--text-muted);font-weight:400;">(optional for demo)</span>
+        </label>
+        <input type="text" name="txn_id" placeholder="e.g. 406782345678"
+               style="width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;
+                      font-size:1rem;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <button type="submit"
+              style="width:100%;padding:.9rem;background:var(--primary);color:#fff;border:none;
+                     border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">
+        ✅ I've Paid — Confirm Subscription
+      </button>
+    </form>
+
+    <a href="{{ url_for('view_subscriptions') }}"
+       style="display:block;text-align:center;margin-top:.75rem;color:var(--text-muted);
+              font-size:.9rem;text-decoration:none;">
+      ← Back to Plans
+    </a>
+
+  </div>
+</div>
+{% endblock %}

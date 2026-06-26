@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ other.name }} — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="chat-wrap">
+    <div class="chat-head">
+      <div class="avatar">{{ other.name[0]|upper }}</div>
+      <div>
+        <div style="font-weight:600">{{ 'Dr. ' if other.role=='doctor' else '' }}{{ other.name }}</div>
+        <div style="font-size:.82rem;opacity:.85">{{ other.role|capitalize }}</div>
+      </div>
+    </div>
+    <div class="chat-body" id="chatBody">
+      {% if messages %}
+        {% for m in messages %}
+          <div class="msg {{ 'msg-me' if m.sender_id == session.user_id else 'msg-them' }}">
+            {{ m.message }}
+            <span class="time">{{ m.created_at }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty" style="margin:auto">
+          <div class="empty-icon">💬</div>
+          <p>No messages yet. Say hi!</p>
+        </div>
+      {% endif %}
+    </div>
+    <form method="POST" class="chat-form">
+      <input type="text" name="message" placeholder="Type a message..." required autocomplete="off">
+      <button class="btn btn-primary">Send</button>
+    </form>
+  </div>
+</div>
+<script>
+  const cb=document.getElementById('chatBody');
+  if(cb) cb.scrollTop = cb.scrollHeight;
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}EHealth — Online Healthcare Platform{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="{{ url_for('index') }}" class="brand">🏥 EHealth</a>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="{{ url_for('index') }}">Home</a>
+      {% if session.user_id %}
+        {% if session.role == 'patient' %}
+          <a href="{{ url_for('patient_dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('browse_doctors') }}">Find Doctors</a>
+          <a href="{{ url_for('view_subscriptions') }}">Plans</a>
+          <a href="{{ url_for('chat_contacts') }}">Messages</a>
+        {% else %}
+          <a href="{{ url_for('doctor_dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('doctor_profile') }}">My Profile</a>
+          <a href="{{ url_for('chat_contacts') }}">Messages</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout ({{ session.user_name }})</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<main class="page-main">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <p>© E-Health — Caring for your health, every day</p>
+</footer>
+</body>
+</html>

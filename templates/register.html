@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Register — EHealth{% endblock %}
+{% block content %}
+<div class="container-sm register-wrap">
+  <div class="auth-card register-card">
+    <div class="auth-head compact">
+      <h1>Create Your Account</h1>
+      <p>Join EHealth as a patient or doctor</p>
+    </div>
+    <form method="POST" id="regForm" class="register-form">
+      <div class="form-group">
+        <div class="role-toggle">
+          <label><input type="radio" name="role" value="patient" checked onchange="togglerole()"><span>🧑 Patient</span></label>
+          <label><input type="radio" name="role" value="doctor" onchange="togglerole()"><span>👨‍⚕️ Doctor</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" name="phone" pattern="\d{10}" required placeholder="9876543210">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" required placeholder="you@example.com">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required minlength="6" placeholder="Min 6 characters">
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirm_password" required minlength="6" placeholder="Re-enter">
+        </div>
+      </div>
+
+      <div id="doctorFields" class="doctor-fields-compact" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Specialization</label>
+            <input type="text" name="specialization" placeholder="e.g. Cardiologist">
+          </div>
+          <div class="form-group">
+            <label>Experience (yrs)</label>
+            <input type="number" name="experience" min="0" value="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Consultation Fee (₹)</label>
+            <input type="number" name="fee" min="0" value="500">
+          </div>
+          <div class="form-group">
+            <label>Short Bio</label>
+            <input type="text" name="bio" placeholder="One line about you">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+    </form>
+    <div class="auth-foot">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
+<script>
+function togglerole(){
+  const isDoc = document.querySelector('input[name=role]:checked').value === 'doctor';
+  document.getElementById('doctorFields').style.display = isDoc ? 'block' : 'none';
+}
+</script>
+{% endblock %}

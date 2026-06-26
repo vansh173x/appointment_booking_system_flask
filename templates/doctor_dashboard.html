@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard — EHealth{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head">
+    <div><h1>Welcome, Dr. {{ session.user_name }} 🩺</h1><p>Manage your appointments and patient interactions</p></div>
+    <a href="{{ url_for('doctor_profile') }}" class="btn btn-outline">Edit Profile</a>
+  </div>
+  <div class="stats-grid">
+    <div class="stat stat-warning"><div class="stat-label">Pending</div><div class="stat-value">{{ pending }}</div></div>
+    <div class="stat stat-accent"><div class="stat-label">Approved</div><div class="stat-value">{{ approved }}</div></div>
+    <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">{{ completed }}</div></div>
+    <div class="stat"><div class="stat-label">Unread Messages</div><div class="stat-value">{{ unread }}</div></div>
+  </div>
+  <div class="card">
+    <h2>Appointment Requests</h2>
+    {% if appointments %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Patient</th><th>Phone</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+          {% for a in appointments %}
+            <tr>
+              <td>{{ a.patient_name }}</td>
+              <td>{{ a.patient_phone }}</td>
+              <td>{{ a.date }}</td>
+              <td>{{ a.time }}</td>
+              <td>{{ a.reason or '—' }}</td>
+              <td><span class="badge badge-{{ a.status }}">{{ a.status }}</span></td>
+              <td style="display:flex;gap:6px;flex-wrap:wrap">
+                {% if a.status == 'pending' %}
+                  <a href="{{ url_for('update_appointment', appt_id=a.id, action='approved') }}" class="btn btn-sm btn-accent">Approve</a>
+                  <a href="{{ url_for('update_appointment', appt_id=a.id, action='rejected') }}" class="btn btn-sm btn-danger">Reject</a>
+                {% elif a.status == 'approved' %}
+                  <a href="{{ url_for('update_appointment', appt_id=a.id, action='completed') }}" class="btn btn-sm btn-primary">Mark Complete</a>
+                {% endif %}
+                <a href="{{ url_for('chat', other_id=a.patient_id) }}" class="btn btn-sm btn-outline">💬</a>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty"><div class="empty-icon">📋</div><p>No appointments yet.</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
